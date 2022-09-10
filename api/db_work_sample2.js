@@ -23,6 +23,29 @@ if( settings_cors ){
 //. CouchDB/Cloudant データベース
 var db = '';
 var db_headers = { 'Accept': 'application/json' };
+if( database_url ){
+  var tmp = database_url.split( '/' );
+  if( tmp.length > 0 ){
+    db = tmp[tmp.length-1];
+  }
+
+  tmp = database_url.split( '//' );
+  if( tmp.length > 0 ){
+    tmp = tmp[1].split( '@' );
+    if( tmp.length > 0 ){
+      var db_basic = Buffer.from( tmp[0] ).toString( 'base64' );
+      db_headers['Authorization'] = 'Basic ' + db_basic;
+    }
+  }
+
+  //. 初期化時に DB が存在していない場合は作成しておく
+  setTimeout( async function(){
+    var r0 = await api.readDb();
+    if( r0 && !r0.status ){
+      await api.createDb();
+    }
+  }, 1000 );
+}
 
 var tmp = database_url.split( '/' );
 if( tmp.length > 0 ){
@@ -53,7 +76,7 @@ api.readDb = function(){
         method: 'GET',
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -76,7 +99,7 @@ api.createDb = function(){
         method: 'PUT',
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -99,7 +122,7 @@ api.deleteDb = function(){
         method: 'DELETE',
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -126,7 +149,7 @@ api.createItem = function( item, id ){
         json: item,
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -155,7 +178,7 @@ api.createItems = async function( items ){
         json: { docs: items },
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -178,7 +201,7 @@ api.readItem = function( id ){
           method: 'GET',
           headers: db_headers
         };
-        request( option, ( err, res, doc ) => {
+        request( option, function( err, res, doc ){
           if( err ){
             resolve( { status: false, error: err } );
           }else{
@@ -211,7 +234,7 @@ api.readItems = function( limit, start ){
         method: 'GET',
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -242,7 +265,7 @@ api.queryItems = function( key, limit, start ){
         json: { selector: { name: key } },
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -281,7 +304,7 @@ api.updateItem = function( item ){
           method: 'GET',
           headers: db_headers
         };
-        request( option, ( err, res, body ) => {
+        request( option, function( err, res, body ){
           if( err ){
             resolve( { status: false, error: err } );
           }else{
@@ -292,7 +315,7 @@ api.updateItem = function( item ){
               json: item,
               headers: db_headers
             };
-            request( option, ( err, res, result ) => {
+            request( option, function( err, res, result ){
               if( err ){
                 resolve( { status: false, error: err } );
               }else{
@@ -323,7 +346,7 @@ api.updateItems = function( items ){
         json: { docs: items },  //. item._rev があれば更新処理になる
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -358,7 +381,7 @@ api.deleteItem = function( id ){
               method: 'DELETE',
               headers: db_headers
             };
-            request( option, ( err, res, body ) => {
+            request( option, function( err, res, body ){
               if( err ){
                 resolve( { status: false, error: err } );
               }else{
@@ -385,7 +408,7 @@ api.deleteItems = function(){
         method: 'GET',
         headers: db_headers
       };
-      request( option, ( err, res, body ) => {
+      request( option, function( err, res, body ){
         if( err ){
           resolve( { status: false, error: err } );
         }else{
@@ -405,7 +428,7 @@ api.deleteItems = function(){
               json: { docs: docs },
               headers: db_headers
             };
-            request( option, ( err, res, body ) => {
+            request( option, function( err, res, body ){
               if( err ){
                 console.log( err );
                 resolve( { status: false, error: err } );
