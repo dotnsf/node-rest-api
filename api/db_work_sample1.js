@@ -1,4 +1,4 @@
-//. db_work_sample.js
+//. db_work_sample1.js
 //. DB連携（メモリDBの稼働サンプル）
 var express = require( 'express' ),
     bodyParser = require( 'body-parser' ),
