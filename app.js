@@ -5,7 +5,7 @@ var express = require( 'express' ),
 
 //. env values
 var API_SERVER = 'API_SERVER' in process.env ? process.env.API_SERVER : '' 
-var DB_API = 'DB_API' in process.env ? 'db_work_sample' + DB_API : 'db';
+var DB_API = 'DB_API' in process.env ? 'db_work_sample' + process.env.DB_API : 'db';
 
 var db = require( './api/' + DB_API );
 app.use( '/api/db', db );
