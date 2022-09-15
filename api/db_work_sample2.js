@@ -47,20 +47,6 @@ if( database_url ){
   }, 1000 );
 }
 
-var tmp = database_url.split( '/' );
-if( tmp.length > 0 ){
-  db = tmp[tmp.length-1];
-}
-
-tmp = database_url.split( '//' );
-if( tmp.length > 0 ){
-  tmp = tmp[1].split( '@' );
-  if( tmp.length > 0 ){
-    var db_basic = Buffer.from( tmp[0] ).toString( 'base64' );
-    db_headers['Authorization'] = 'Basic ' + db_basic;
-  }
-}
-
 //. POST メソッドで JSON データを受け取れるようにする
 api.use( bodyParser.urlencoded( { extended: true } ) );
 api.use( bodyParser.json() );
