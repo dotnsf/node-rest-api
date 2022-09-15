@@ -15,9 +15,11 @@ APIs are based on memory-based simple DB.
 
 ## Environment values
 
+  - `API_SERVER` : Base URL of API Server(Default:'')
+
   - `CORS` : CORS allowed URL origin(Default:'')
 
-  - `API_SERVER` : Base URL of API Server(Default:'')
+  - `DB_API` : Specify number(1-3) if you want to use `db_work_sample`(Default:'db')
 
   - `PORT` : Listening port number(Default:8080)
 
@@ -47,9 +49,9 @@ APIs are based on memory-based simple DB.
 
   - Runs on port 8080, API_SERVER=''(local), and with CORS=http://localhost:8081.
 
-- `$ docker run -d --name node-rest-api-front -e PORT=8081 -e API_SERVER=http://localhost:8080 -p 8081:8081 dotnsf/node-rest-api`
+- `$ docker run -d --name node-rest-api-front -e PORT=8081 -e API_SERVER=http://localhost:8080 -e DB_API=3 -p 8081:8081 dotnsf/node-rest-api`
 
-  - Runs on port 8081, API_SERVER=http://localhost:8080, and with no CORS.
+  - Runs on port 8081, API_SERVER=http://localhost:8080, DB_API=db_work_sample3, and with no CORS.
 
 
 ## Avalable CRUD APIs
