@@ -260,8 +260,11 @@ api.get( '/items', async function( req, res ){
   }
 
   //. レコード一覧を取得して、その結果を返したい
-  res.write( JSON.stringify( { status: true, items: [] }, null, 2 ) );
-  res.end();
+  api.readItems( limit, start ).then( function( result ){
+    res.status( result.status ? 200 : 400 );
+    res.write( JSON.stringify( result, null, 2 ) );
+    res.end();
+  });
 });
 
 api.get( '/items/:key', async function( req, res ){
